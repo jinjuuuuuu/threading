@@ -1,10 +1,19 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response, abort
 
-app = Flask(__name__)  # Flask 애플리케이션 인스턴스를 생성
+app = Flask(__name__)
 
-@app.route('/api', methods=['GET'])  # GET 요청을 받을 '/api' 엔드포인트 설정
+@app.route('/api', methods=['GET']) 
 def api():
-    return jsonify(message="Hello, world!")  # 'message'라는 키를 가진 JSON 응답 반환
+    return jsonify(message="Hello, world!")
+
+@app.route('/example/<int:id>', methods=['GET'])
+def example(id):
+    if id == 0:
+        abort(400)
+    data = {'id': id}
+    response = make_response(jsonify(data))
+    response.status_code = 200
+    return response
 
 if __name__ == '__main__':
-    app.run(debug=True)  # 애플리케이션 실행
+    app.run(debug=True)
